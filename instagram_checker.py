@@ -92,12 +92,32 @@ class InstagramSwimsuitChecker:
     async def check_login_status(self):
         """Check if user is logged in"""
         try:
-            await self.page.wait_for_selector('svg[aria-label="Home"], a[href="/"]', timeout=5000)
+            # Check URL first
             current_url = self.page.url
-            if 'login' in current_url:
+            if 'login' in current_url or 'accounts/login' in current_url:
                 return False
-            nav_elements = await self.page.query_selector('nav')
-            return nav_elements is not None
+
+            # Wait for logged-in indicators
+            await asyncio.sleep(2)
+
+            # Look for multiple indicators that user is logged in
+            # Check for navigation bar
+            nav = await self.page.query_selector('nav')
+            if nav:
+                # Check for profile icon or home icon
+                home_icon = await self.page.query_selector('svg[aria-label="Home"]')
+                search_icon = await self.page.query_selector('svg[aria-label="Search"]')
+                profile_link = await self.page.query_selector('a[href*="/"]')
+
+                if home_icon or search_icon or profile_link:
+                    return True
+
+            # Alternative: check for username input (means we're on login page)
+            login_input = await self.page.query_selector('input[name="username"]')
+            if login_input:
+                return False
+
+            return False
         except:
             return False
 
@@ -111,32 +131,64 @@ class InstagramSwimsuitChecker:
         try:
             await self.page.click('button:has-text("Allow all cookies")', timeout=5000)
         except:
-            pass
+            try:
+                await self.page.click('button:has-text("Allow essential and optional cookies")', timeout=3000)
+            except:
+                pass
 
         # Fill login form
         await asyncio.sleep(2)
         await self.page.fill('input[name="username"]', self.username)
+        await asyncio.sleep(1)
         await self.page.fill('input[name="password"]', self.password)
+        await asyncio.sleep(1)
         await self.page.click('button[type="submit"]')
 
         print("⏳ Waiting for login process...")
-        await asyncio.sleep(5)
+        await asyncio.sleep(8)
 
-        # Close pop-ups
+        # Handle "Save Your Login Info?" popup
         try:
-            await self.page.click('button:has-text("Not Now")', timeout=5000)
+            await self.page.click('button:has-text("Save Info")', timeout=3000)
+            print("  ✓ Saved login info")
+            await asyncio.sleep(2)
+        except:
+            try:
+                await self.page.click('button:has-text("Not Now")', timeout=3000)
+                await asyncio.sleep(2)
+            except:
+                pass
+
+        # Handle "Turn on Notifications" popup
+        try:
+            await self.page.click('button:has-text("Not Now")', timeout=3000)
+            print("  ✓ Dismissed notifications")
+            await asyncio.sleep(2)
         except:
             pass
 
+        # Wait for home page to fully load
+        print("⏳ Waiting for home page to load completely...")
         try:
-            await self.page.click('button:has-text("Not Now")', timeout=5000)
+            await self.page.wait_for_selector('svg[aria-label="Home"], a[href="/"]', timeout=10000)
+            await asyncio.sleep(3)
         except:
-            pass
+            print("  ⚠️  Warning: Home page elements not detected, but continuing...")
 
-        # Save session
+        # Verify we're actually logged in
+        is_logged_in = await self.check_login_status()
+        if not is_logged_in:
+            raise Exception("Login verification failed. Please check credentials.")
+
+        # Save session AFTER everything is fully loaded
         print("💾 Saving session for future use...")
         await self.context.storage_state(path=self.session_file)
-        print("✅ Successfully logged in and session saved!")
+
+        # Verify session was saved
+        if Path(self.session_file).exists():
+            print("✅ Successfully logged in and session saved!")
+        else:
+            print("⚠️  Warning: Session file may not have been saved properly")
 
     async def cleanup(self):
         """Cleanup browser and playwright"""

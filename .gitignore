@@ -11,9 +11,6 @@ ENV/
 # Environment variables
 .env
 
-# Session files
-instagram_session.json
-
 # Images
 images/
 *.jpg
@@ -22,7 +19,6 @@ images/
 
 # Results
 results.json
-batch_results/
 
 # IDE
 .vscode/

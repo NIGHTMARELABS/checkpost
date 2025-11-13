@@ -5,6 +5,7 @@ This program scrapes Instagram profiles, downloads images from posts, and uses O
 ## ✨ Features
 
 - ✅ **Session Management** - Login once, reuse session on next runs
+- ✅ **Batch Mode** - Process multiple profiles automatically from a list
 - ✅ **Automated Instagram Login** - Uses Playwright for full browser automation
 - ✅ **Smart Post Scraping** - Automatically scrolls and collects posts
 - ✅ **Video Filtering** - Detects and skips videos (only processes images)
@@ -64,10 +65,21 @@ TARGET_INSTAGRAM_USERNAME=profile_to_analyze
 
 ## 💻 Usage
 
-Run the program:
+### Single Profile Mode
+
+Analyze one profile at a time:
 ```bash
 python instagram_swimsuit_detector.py
 ```
+
+### Batch Mode (Multiple Profiles)
+
+Process multiple profiles from a list:
+```bash
+python batch_checker.py
+```
+
+See [BATCH_MODE.md](BATCH_MODE.md) for detailed batch mode documentation.
 
 ### First Run
 ```

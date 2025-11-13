@@ -65,21 +65,30 @@ TARGET_INSTAGRAM_USERNAME=profile_to_analyze
 
 ## 💻 Usage
 
-### Single Profile Mode
+### Main Program (Recommended) ⭐
 
-Analyze one profile at a time:
+**One file with all features:**
+```bash
+python instagram_checker.py
+```
+
+Choose your mode:
+- **Option 1**: Single Profile Mode - Analyze one profile
+- **Option 2**: Batch Mode - Analyze multiple profiles from usernames.txt
+
+### Alternative (Separate Scripts)
+
+Single profile:
 ```bash
 python instagram_swimsuit_detector.py
 ```
 
-### Batch Mode (Multiple Profiles)
-
-Process multiple profiles from a list:
+Batch mode:
 ```bash
 python batch_checker.py
 ```
 
-See [BATCH_MODE.md](BATCH_MODE.md) for detailed batch mode documentation.
+See [BATCH_MODE.md](BATCH_MODE.md) for detailed documentation.
 
 ### First Run
 ```

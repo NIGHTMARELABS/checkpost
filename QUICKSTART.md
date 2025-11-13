@@ -33,14 +33,23 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxx
 
 ## Step 3: Run the Program 🎯
 
-### Single Profile Mode
-Analyze one profile:
+### Main Program (Recommended) ⭐
+**One file with everything:**
+```bash
+python instagram_checker.py
+```
+
+Then choose:
+- **1** = Single Profile Mode (one profile)
+- **2** = Batch Mode (all 28 profiles from usernames.txt)
+
+### Alternative
+Single profile:
 ```bash
 python instagram_swimsuit_detector.py
 ```
 
-### Batch Mode (Your 28 Profiles)
-Process all profiles from `usernames.txt`:
+Batch mode:
 ```bash
 python batch_checker.py
 ```

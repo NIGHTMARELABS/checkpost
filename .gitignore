@@ -11,6 +11,9 @@ ENV/
 # Environment variables
 .env
 
+# Session files
+instagram_session.json
+
 # Images
 images/
 *.jpg

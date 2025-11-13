@@ -159,8 +159,8 @@ class InstagramSwimsuitChecker:
         last_height = await self.page.evaluate('document.body.scrollHeight')
 
         while len(posts_data) < max_posts:
-            # Find all posts
-            posts = await self.page.query_selector_all('article a[href*="/p/"], article a[href*="/reel/"]')
+            # Find all posts (Instagram uses direct <a> tags, not wrapped in <article>)
+            posts = await self.page.query_selector_all('a[href*="/p/"], a[href*="/reel/"]')
             print(f"📊 Found posts: {len(posts)}")
 
             for post in posts[:max_posts]:
